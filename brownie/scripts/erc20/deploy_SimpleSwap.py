@@ -28,13 +28,18 @@ def deploy_contract_with_testnetwork():
     """
     accounts = import_private_keys()
 
-    # 获取已经部署的Token的合约地址
-    deployed_count = len(Token)
-    if deployed_count == 0:
-        raise ValueError("No deployed Token")
-    latest_deployed_instance = Token[deployed_count - 1]
-    print(latest_deployed_instance.address)
+    if len(accounts) == 0:
+        raise ValueError("No account imported")
 
+    # 进行合约部署
+    ETH = Token.deploy("MYETH", "ETH", total_supply, {"from": accounts[0]}, publish_source=True)
+    print(f"ETH合约已部署到: {ETH.address}")  # 打印部署后的合约地址
+
+    USDT = Token.deploy("MYUSDT", "USDT", total_supply, {"from": accounts[0]}, publish_source=True)
+    print(f"USDT合约已部署到: {USDT.address}")  # 打印部署后的合约地址
+
+    contract = SimpleSwap.deploy(ETH.address, USDT.address, {"from": accounts[0]}, publish_source=True)
+    print(f"swap合约已部署到: {contract.address}")  # 打印部署后的合约地址
 
 def import_private_keys():
     """

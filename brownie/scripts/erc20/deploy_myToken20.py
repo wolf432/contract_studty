@@ -25,7 +25,7 @@ def deploy_contract_with_testnetwork():
 
     gas_price_wei = Wei("176 gwei")
     # 部署合约
-    contract = MyToken20.deploy("LiNan","LN",total_supply, {"from": accounts[0], "gasPrice": gas_price_wei}, publish_source=True)
+    contract = MyToken20.deploy("METH","METH",total_supply, {"from": accounts[0], "gasPrice": gas_price_wei}, publish_source=True)
     print(f"合约已部署到: {contract.address}")
 
 

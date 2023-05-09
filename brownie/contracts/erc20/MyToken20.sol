@@ -9,7 +9,7 @@ contract MyToken20 is IERC20 {
     // 代币符号
     string private _symbol;
     // 代币精度
-    uint8 public constant decimals = 18;
+    uint8 constant _decimals = 18;
     // 存储每个地址的余额
     mapping(address => uint256) balances;
 
@@ -39,7 +39,7 @@ contract MyToken20 is IERC20 {
     }
 
     function decimals() public view returns (uint8){
-        return decimals;
+        return _decimals;
     }
 
     // 获取代币总供应量

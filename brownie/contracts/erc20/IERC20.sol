@@ -5,13 +5,13 @@ pragma solidity ^0.8.0;
 interface IERC20 {
 
     // 获取代币名称
-    function name() public view returns (string);
+    function name() external view returns (string memory);
 
     // 获取代币符号
-    function symbol() public view returns (string);
+    function symbol() external view returns (string memory);
 
     // 获取代币精度
-    function decimals() public view returns (uint8);
+    function decimals() external view returns (uint8);
 
     // 获取总供应量
     function totalSupply() external view returns (uint256);

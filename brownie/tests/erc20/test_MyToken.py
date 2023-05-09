@@ -6,20 +6,20 @@ TokenTotalSupply = 100000
 
 
 @pytest.fixture
-def token(MyToken20):
+def token(Token):
     if network.show_active() != 'development':
         # 获取最新部署的MyToken20的合约地址
-        deployed_count = len(MyToken20)
+        deployed_count = len(Token)
         if deployed_count == 0:
             raise ValueError("No deployed MyToken20")
-        latest_deployed_instance = MyToken20[deployed_count - 1]
+        latest_deployed_instance = Token[deployed_count - 1]
         latest_deployed_address = latest_deployed_instance.address
 
         # 加载已部署的MyToken20合约
-        myToken = MyToken20.at(latest_deployed_address)
+        myToken = Token.at(latest_deployed_address)
         imported_accounts = import_private_keys()
     else:
-        myToken = MyToken20.deploy("METH", "METH", TokenTotalSupply, {"from": accounts[0]})
+        myToken = Token.deploy("METH", "METH", TokenTotalSupply, {"from": accounts[0]})
         imported_accounts = accounts
 
     return myToken, imported_accounts
@@ -51,9 +51,9 @@ def test_base_info(token):
     totalSupply = myToken.totalSupply()
     assert totalSupply == TokenTotalSupply * 10 ** myToken.decimals()
 
-    assert myToken.name() == "LiNan"
+    assert myToken.name() == "METH"
 
-    assert myToken.symbol() == "LN"
+    assert myToken.symbol() == "METH"
 
 
 def test_transfer(token):

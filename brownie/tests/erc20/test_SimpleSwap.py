@@ -7,12 +7,47 @@ TokenTotalSupply = 100000
 
 @pytest.fixture
 def token(Token, SimpleSwap):
-    ETH = Token.deploy("MYETH", "ETH", TokenTotalSupply, {"from": accounts[0]})
-    USDT = Token.deploy("MUSDT", "USDT", TokenTotalSupply, {"from": accounts[0]})
-    SWAP = SimpleSwap.deploy(ETH, USDT, {"from": accounts[0]})
+    if network.show_active() != 'development':
+        # 获取最新部署的MyToken20的合约地址
+        MyToken20_deploy = len(Token)
+        if MyToken20_deploy == 0:
+            raise ValueError("No deployed MyToken20")
 
-    return ETH, USDT, SWAP, accounts
+        SimpleSwap_deploy = len(SimpleSwap)
+        if SimpleSwap_deploy == 0:
+            raise ValueError("No deployed SimpleSwap")
 
+        eth_instance = Token[MyToken20_deploy - 1]
+        usdt_instance = Token[MyToken20_deploy - 2]
+        swap_instance = SimpleSwap[SimpleSwap_deploy - 1]
+
+        # 加载已部署的MyToken20合约
+        ETH = Token.at(eth_instance.address)
+        USDT = Token.at(usdt_instance.address)
+        SWAP = SimpleSwap.at(swap_instance.address)
+
+        imported_accounts = import_private_keys()
+    else:
+        ETH = Token.deploy("MYETH", "ETH", TokenTotalSupply, {"from": accounts[0]})
+        USDT = Token.deploy("MUSDT", "USDT", TokenTotalSupply, {"from": accounts[0]})
+        SWAP = SimpleSwap.deploy(ETH, USDT, {"from": accounts[0]})
+        imported_accounts = accounts
+
+    return ETH, USDT, SWAP, imported_accounts
+
+def import_private_keys():
+    """
+    导入本地私钥的地址
+    :return: accounts
+    """
+    with open("private_key.txt", "r") as f:
+        private_keys = f.read().splitlines()
+
+    for private_key in private_keys:
+        accounts.add(private_key)
+
+    # raise SystemExit("停止测试并退出")
+    return accounts
 
 @pytest.fixture
 def test_add(token):
